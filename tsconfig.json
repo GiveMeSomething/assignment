@@ -19,8 +19,8 @@
 
     // Linting
     "strict": true,
-    "noUnusedLocals": true,
     "noFallthroughCasesInSwitch": true,
+    "strictPropertyInitialization": false,
 
     // Import path
     "baseUrl": ".",
