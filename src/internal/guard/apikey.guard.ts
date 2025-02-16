@@ -15,7 +15,7 @@ export class APIKeyAuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<Request>();
 
-    const extractedHeader = request.headers[this.appConfig.server.authHeader];
+    const extractedHeader = request.get(this.appConfig.server.authHeader);
     if (extractedHeader == null) {
       return false;
     }

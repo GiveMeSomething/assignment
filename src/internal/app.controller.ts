@@ -1,4 +1,5 @@
-import { Controller, Get, HttpCode } from "@nestjs/common";
+import { Controller, Get, HttpCode, UseGuards } from "@nestjs/common";
+import { APIKeyAuthGuard } from "./guard/apikey.guard";
 
 @Controller()
 export class AppController {
@@ -8,5 +9,11 @@ export class AppController {
   @HttpCode(200)
   healthCheck() {
     return "healthy";
+  }
+
+  @Get("protect")
+  @UseGuards(APIKeyAuthGuard)
+  execProtectedEndpoint() {
+    return "OK";
   }
 }
