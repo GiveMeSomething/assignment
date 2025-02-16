@@ -7,6 +7,9 @@ import { readFile } from "fs/promises";
 const APP_MODE_KEY = "APP_MODE";
 const APP_PORT_KEY = "APP_PORT";
 
+const APP_AUTH_HEADER_KEY = "APP_AUTH_HEADER";
+const APP_AUTH_VALUE_KEY = "APP_AUTH_VALUE";
+
 export type AppMode = "DEVELOPMENT" | "PRODUCTION" | "MAINTENANCE";
 
 export const isAppMode = (input: string): input is AppMode => {
@@ -24,9 +27,18 @@ export class RawServerConfig {
   @Max(65_535)
   port: number;
 
-  constructor(mode: AppMode, port: number) {
+  @IsNotEmpty()
+  authValue: string;
+
+  @IsNotEmpty()
+  authHeader: string;
+
+  constructor(mode: AppMode, port: number, header: string, authApiKey: string) {
     this.mode = mode;
     this.port = port;
+
+    this.authHeader = header;
+    this.authValue = authApiKey;
   }
 
   async validateConfig(): Promise<Undefinable<Error>> {
@@ -55,6 +67,8 @@ export class RawServerConfig {
     const serverConfig = new RawServerConfig(
       config[APP_MODE_KEY] as AppMode,
       Number(config[APP_PORT_KEY]),
+      config[APP_AUTH_HEADER_KEY],
+      config[APP_AUTH_VALUE_KEY],
     );
 
     const validationErr = await serverConfig.validateConfig();
